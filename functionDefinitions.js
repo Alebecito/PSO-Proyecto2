@@ -3,7 +3,8 @@ let memoriaTotal;
 let listaDeAccesos;
 const memoriaOptima = new claseMemoriaOptima("Óptimo");
 const memoriaRandom = new claseMemoriaRandom("Random");
-const memorias= [memoriaOptima,memoriaRandom];
+const memoriaLRU = new claseMemoriaLRU("LRU");
+const memorias= [memoriaOptima,memoriaLRU];
 let tablaDeProcesos=[];
 
 
