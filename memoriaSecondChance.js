@@ -1,11 +1,11 @@
-class claseMemoriaLRU {
+class claseMemoriaSecondChance {
   constructor(tipo) {
     this.tipo = tipo;
     this.MMU = [];
     this.RAM = this.memoriaDisponible = Array(100).fill(0);
     this.memoriaAsignada = [];
     this.cantidadDeFallosDePagina = 0;
-    this.colaDePaginas = [];
+    this.victima = 0;
   }
 
   dibujarMemoria() {
@@ -65,7 +65,7 @@ class claseMemoriaLRU {
       for (let i = 0; i < tamano; i++) {
         this.MMU[this.MMU.length - 1].paginas.push({
           espacioEnMemoria: -1,
-          enMemoria: false,
+          marcado: false,
         });
       }
     } else {
@@ -80,7 +80,7 @@ class claseMemoriaLRU {
       for (let i = 0; i < tamano; i++) {
         this.MMU[this.MMU.length - 1].paginas.push({
           espacioEnMemoria: -1,
-          enMemoria: false,
+          marcado: false,
         });
       }
     }
@@ -92,17 +92,17 @@ class claseMemoriaLRU {
           if (this.MMU[i].paginas[j].espacioEnMemoria === -1) {
             if (this.RAM.indexOf(0) !== -1) {
               this.MMU[i].paginas[j].espacioEnMemoria = this.RAM.indexOf(0);
-              this.colaDePaginas.push(this.RAM.indexOf(0));
+              this.MMU[i].paginas[j].marcado = false;
               this.RAM[this.RAM.indexOf(0)] = parseInt(procesoID);
               this.cantidadDeFallosDePagina++;
             } else {
-              let indiceDeCambio = this.paginarMemoria(parseInt(procesoID), puntero);
+              let indiceDeCambio = this.paginarMemoria(parseInt(procesoID));
               this.MMU[i].paginas[j].espacioEnMemoria = indiceDeCambio;
+              this.MMU[i].paginas[j].marcado = false;
               this.cantidadDeFallosDePagina++;
             }
           } else {
-            this.colaDePaginas.splice(this.MMU[i].paginas[j].espacioEnMemoria, 1);
-            this.colaDePaginas.push(this.RAM[this.MMU[i].paginas[j].espacioEnMemoria]);
+            this.MMU[i].paginas[j].marcado = true;
           }
         }
         break;
@@ -113,33 +113,53 @@ class claseMemoriaLRU {
     //   console.log("RAM ", this.RAM);
     //   console.log("tabla de proceso", tablaDeProcesos);
     //   console.log("-------------------------------------------------");
-    //regex to eliminate everything in front of a coma except for the \n
-    let regex = /(?<=\n)[^,]*/g;
   }
 
-  paginarMemoria(nuevoProceso, nuevoPuntero) {
-    let indiceDeCambio = this.colaDePaginas.shift();
-    this.colaDePaginas.push(indiceDeCambio);
+  paginarMemoria(nuevoProceso) {
+    let indice = -1;
+
+    let flag = true;
+    while (flag) {
+      for (let element1 in this.MMU) {
+        for (let element2 in this.MMU[element1].paginas) {
+          if (this.MMU[element1].paginas[element2].espacioEnMemoria === this.victima) {
+            if (this.MMU[element1].paginas[element2].marcado === true) {
+              this.MMU[element1].paginas[element2].marcado = false;
+              this.victima = (this.victima + 1) % 100;
+              console.log("Victima", this.victima);
+            } else {
+              indice = this.MMU[element1].paginas[element2].espacioEnMemoria;
+              flag = false;
+              console.log("Elegida Victima", this.victima);
+              break;
+            }
+          }
+        }
+        break;
+      }
+      break;
+    }
+
     for (let element1 in this.MMU) {
       for (let element2 in this.MMU[element1].paginas) {
-        if (this.MMU[element1].paginas[element2].espacioEnMemoria === indiceDeCambio) {
+        if (this.MMU[element1].paginas[element2].espacioEnMemoria === indice) {
+          this.victima = indice + 1;
           this.MMU[element1].paginas[element2].espacioEnMemoria = -1;
-          this.RAM[indiceDeCambio] = nuevoProceso;
-          return indiceDeCambio;
+          this.MMU[element1].paginas[element2].marcado = false;
+
+          this.RAM[indice] = nuevoProceso;
+          return indice;
         }
       }
     }
   }
 
   eliminaProcesoDeMemoria(idProceso) {
-    let paginasABorrar = [];
     for (let index = 0; index < this.RAM.length; index++) {
       if (this.RAM[index] === idProceso) {
         this.RAM[index] = 0;
-        paginasABorrar.push(index);
       }
     }
-    this.colaDePaginas = this.colaDePaginas.filter((item) => paginasABorrar.indexOf(item) === -1);
   }
 
   eliminarDeMMUyMemoriaAsignada(proceso) {

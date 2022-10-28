@@ -5,7 +5,8 @@ const memoriaOptima = new claseMemoriaOptima("Óptimo");
 const memoriaRandom = new claseMemoriaRandom("Random");
 const memoriaLRU = new claseMemoriaLRU("LRU");
 const memoriaAging = new claseMemoriaAging("Aging");
-const memorias = [memoriaOptima, memoriaAging];
+const memoriaSecondChance = new claseMemoriaSecondChance("Second Chance");
+const memorias = [memoriaOptima, memoriaSecondChance];
 let tablaDeProcesos = [];
 
 generatorRandom = SeedRandom(1); //El 10 es el seed
@@ -96,12 +97,7 @@ function SeedRandom(state1, state2) {
   function random(limit) {
     state1 = (state1 * mul1) % mod1;
     state2 = (state2 * mul2) % mod2;
-    if (
-      state1 < limit &&
-      state2 < limit &&
-      state1 < mod1 % limit &&
-      state2 < mod2 % limit
-    ) {
+    if (state1 < limit && state2 < limit && state1 < mod1 % limit && state2 < mod2 % limit) {
       return random(limit);
     }
     return (state1 + state2) % limit;
@@ -112,8 +108,7 @@ function SeedRandom(state1, state2) {
 function reducirTiempoProcesos() {
   for (let element in tablaDeProcesos) {
     if (tablaDeProcesos[element].accesoCompletado === true) {
-      tablaDeProcesos[element].tiempoDeVida =
-        tablaDeProcesos[element].tiempoDeVida - 1;
+      tablaDeProcesos[element].tiempoDeVida = tablaDeProcesos[element].tiempoDeVida - 1;
     }
   }
 
@@ -123,22 +118,17 @@ function reducirTiempoProcesos() {
 function chequearProcesoAcabado() {
   for (let element in tablaDeProcesos) {
     if (tablaDeProcesos[element].tiempoDeVida <= 0) {
-      console.log(
-        "Eliminado Proceso acabado ",
-        tablaDeProcesos[element].idProceso
-      );
+      //   console.log("Eliminado Proceso acabado ", tablaDeProcesos[element].idProceso);
       for (let objeto of memorias) {
         objeto.eliminaProcesoDeMemoria(tablaDeProcesos[element].idProceso);
-        objeto.eliminarDeMMUyMemoriaAsignada(
-          tablaDeProcesos[element].idProceso
-        );
-        console.log("RAM ", objeto.RAM);
-        console.log("Memoria Asignada ", objeto.memoriaAsignada);
-        console.log("MMU ", objeto.MMU);
+        objeto.eliminarDeMMUyMemoriaAsignada(tablaDeProcesos[element].idProceso);
+        //   console.log("RAM ", objeto.RAM);
+        //   console.log("Memoria Asignada ", objeto.memoriaAsignada);
+        //   console.log("MMU ", objeto.MMU);
       }
       tablaDeProcesos.splice(element, 1);
-      console.log("tabla de proceso", tablaDeProcesos);
-      console.log("-------------------------------------------------");
+      //   console.log("tabla de proceso", tablaDeProcesos);
+      //   console.log("-------------------------------------------------");
       break;
     }
   }

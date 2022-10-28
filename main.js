@@ -33,9 +33,7 @@ function draw() {
       listaDeAccesos = listaDeAccesos.slice(1);
       if (verificarUltimoAccesoAMemoria(parseInt(procesoSolicitado)) === -1) {
         for (let element in tablaDeProcesos) {
-          if (
-            tablaDeProcesos[element].idProceso === parseInt(procesoSolicitado)
-          ) {
+          if (tablaDeProcesos[element].idProceso === parseInt(procesoSolicitado)) {
             tablaDeProcesos[element].accesoCompletado = true;
           }
         }

@@ -14,22 +14,14 @@ class claseMemoriaRandom {
     this.tipo === "Óptimo" ? (posiciony = 50) : (posiciony = 100);
     fill(0);
     textSize(15);
-    text(
-      "Fallos de Página: " + this.cantidadDeFallosDePagina,
-      width / 2 - 200,
-      posiciony - 5
-    );
+    text("Fallos de Página: " + this.cantidadDeFallosDePagina, width / 2 - 200, posiciony - 5);
     fill(0);
     textSize(15);
     text("Algoritmo " + this.tipo, width / 2 - 400, posiciony - 5);
     for (let i = 0; i < 100; i++) {
       this.RAM[i] === 0
         ? noFill()
-        : fill(
-            obtenerRGB(this.RAM[i])[0],
-            obtenerRGB(this.RAM[i])[1],
-            obtenerRGB(this.RAM[i])[2]
-          );
+        : fill(obtenerRGB(this.RAM[i])[0], obtenerRGB(this.RAM[i])[1], obtenerRGB(this.RAM[i])[2]);
       rect(width / 2 - 500 + i * 10, posiciony, 10, 25);
     }
   }
@@ -111,20 +103,18 @@ class claseMemoriaRandom {
         break;
       }
     }
-    console.log("Memoria Asignada", this.memoriaAsignada);
-    console.log("MMU ", this.MMU);
-    console.log("RAM ", this.RAM);
-    console.log("tabla de proceso", tablaDeProcesos);
-    console.log("-------------------------------------------------");
+    //   console.log("Memoria Asignada", this.memoriaAsignada);
+    //   console.log("MMU ", this.MMU);
+    //   console.log("RAM ", this.RAM);
+    //   console.log("tabla de proceso", tablaDeProcesos);
+    //   console.log("-------------------------------------------------");
   }
 
   paginarMemoria(nuevoProceso) {
     let randomIndex = generateRandomInteger(99, 0);
     for (let element1 in this.MMU) {
       for (let element2 in this.MMU[element1].paginas) {
-        if (
-          this.MMU[element1].paginas[element2].espacioEnMemoria === randomIndex
-        ) {
+        if (this.MMU[element1].paginas[element2].espacioEnMemoria === randomIndex) {
           this.MMU[element1].paginas[element2].espacioEnMemoria = -1;
           this.RAM[randomIndex] = nuevoProceso;
           return randomIndex;
@@ -148,9 +138,7 @@ class claseMemoriaRandom {
       }
     }
     for (let i = this.memoriaAsignada.length - 1; i >= 0; --i) {
-      if (
-        parseInt(procesoDePuntero(this.memoriaAsignada[i].puntero)) === proceso
-      ) {
+      if (parseInt(procesoDePuntero(this.memoriaAsignada[i].puntero)) === proceso) {
         this.memoriaAsignada.splice(i, 1);
       }
     }
