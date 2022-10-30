@@ -1,7 +1,8 @@
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(2500, 2500);
   //Convirtiendo memoria inicial en un diccionario lógico
   mapearMemoriaTotal();
+  mapearListaDeAccesos();
   console.log("Memoria Total ", memoriaTotal);
   console.log("Lista De Accesos ", listaDeAccesos);
 }
@@ -24,6 +25,7 @@ function draw() {
   dibujarCronometro();
   for (let element of memorias) {
     element.dibujarMemoria();
+    element.dibujarEstadoDeMemoria();
   }
   if (frameCount % 60 == 0) {
     if (listaDeAccesos.length > 0) {

@@ -6,7 +6,7 @@ const memoriaRandom = new claseMemoriaRandom("Random");
 const memoriaLRU = new claseMemoriaLRU("LRU");
 const memoriaAging = new claseMemoriaAging("Aging");
 const memoriaSecondChance = new claseMemoriaSecondChance("Second Chance");
-const memorias = [memoriaOptima, memoriaSecondChance];
+const memorias = [memoriaOptima, memoriaRandom];
 let tablaDeProcesos = [];
 
 generatorRandom = SeedRandom(1); //El 10 es el seed
@@ -137,17 +137,14 @@ function chequearProcesoAcabado() {
 function dibujarCronometro() {
   fill(0);
   textSize(20);
-  text("Tiempo transcurrido :", width / 2 - 420, 210);
-  fill(0);
-  textSize(20);
-  text(chronometer + "s", width / 2 - 225, 210);
+  text(chronometer + "s", 10, 50);
   if (frameCount % 60 == 0) {
     chronometer++;
   }
 }
 function preload() {
   memoriaTotal = loadStrings("procesos.txt");
-  listaDeAccesos = loadStrings("listaDeAccesos.txt");
+  listaDeAccesos = loadStrings("procesos.txt");
 }
 
 function mapearMemoriaTotal() {
@@ -164,3 +161,46 @@ function mapearMemoriaTotal() {
   }
   memoriaTotal = objetoAuxiliar.slice(0);
 }
+
+function mapearListaDeAccesos(){
+  let cantidadAleatoria = 0;
+  let objetoAuxiliar = [];
+  let arregloAuxiliar = [];
+  listaDeAccesos = listaDeAccesos.slice(1);
+  for (let element in listaDeAccesos) {
+    arregloAuxiliar = listaDeAccesos[element].split(",");
+    objetoAuxiliar.push(arregloAuxiliar[1].trim(),);
+  }
+  listaDeAccesos = objetoAuxiliar.slice(0);
+  arregloAuxiliar=[];
+  for(let element in listaDeAccesos){
+    cantidadAleatoria= generateRandomInteger(10, 1);
+    for(let i=0; i<cantidadAleatoria; i++){
+      arregloAuxiliar.push(listaDeAccesos[element]);
+    }
+  }
+  arregloAuxiliar=revolverArreglo(arregloAuxiliar);
+
+  listaDeAccesos = arregloAuxiliar.slice(0);
+}
+
+
+function revolverArreglo(inputArray) {
+  let currentIndex = inputArray.length,  randomIndex;
+
+  // While there remain elements to shuffle.
+  while (currentIndex != 0) {
+
+    // Pick a remaining element.
+    randomIndex = generateRandomInteger(currentIndex, 0);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [inputArray[currentIndex], inputArray[randomIndex]] = [
+      inputArray[randomIndex], inputArray[currentIndex]];
+  }
+
+  return inputArray;
+}
+
+
