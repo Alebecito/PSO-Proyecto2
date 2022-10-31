@@ -106,10 +106,10 @@ class claseMemoriaAging {
     for (let i = 0; i < this.MMU.length; i++) {
       if (this.MMU[i].id === puntero) {
         for (let j = 0; j < this.MMU[i].paginas.length; j++) {
-          let bit = this.MMU[i].paginas[j].contador[0]
-          let new_contador = this.MMU[i].paginas[j].contador.replace(bit, '1');
-          this.MMU[i].paginas[j].contador = new_contador;
           if (this.MMU[i].paginas[j].espacioEnMemoria === -1) {
+            let bit = this.MMU[i].paginas[j].contador[0]
+            let new_contador = this.MMU[i].paginas[j].contador.replace(bit, '1');
+            this.MMU[i].paginas[j].contador = new_contador;
             if (this.RAM.indexOf(0) !== -1) {
               this.MMU[i].paginas[j].espacioEnMemoria = this.RAM.indexOf(0);
               this.RAM[this.RAM.indexOf(0)] = parseInt(procesoID);
@@ -177,7 +177,7 @@ class claseMemoriaAging {
         if (this.MMU[element1].paginas[element2].espacioEnMemoria === indiceDeCambio) {
           this.MMU[element1].paginas[element2].espacioEnMemoria = -1;
           this.MMU[element1].paginas[element2].contador = "0000000000";
-      this.RAM[indiceDeCambio] = nuevoProceso;
+          this.RAM[indiceDeCambio] = nuevoProceso;
           return indiceDeCambio;
         }
       }
