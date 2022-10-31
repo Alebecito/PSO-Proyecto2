@@ -6,7 +6,7 @@ const memoriaRandom = new claseMemoriaRandom("Random");
 const memoriaLRU = new claseMemoriaLRU("LRU");
 const memoriaAging = new claseMemoriaAging("Aging");
 const memoriaSecondChance = new claseMemoriaSecondChance("Second Chance");
-const memorias = [memoriaOptima, memoriaRandom];
+const memorias = [memoriaOptima, memoriaAging];
 let tablaDeProcesos = [];
 
 generatorRandom = SeedRandom(1); //El 10 es el seed
@@ -22,6 +22,21 @@ function obtenerRGB(proceso) {
   }
   return RGB;
 }
+
+function shiftString(str, leftShifts, rightShifts) {
+  str = shiftLeft(str, leftShifts);
+  return shiftRight(str,  rightShifts);
+}
+
+function shiftLeft(str, leftShifts) {
+return str.substring(leftShifts) + str.substring(0, leftShifts);
+}
+
+function shiftRight(str,  rightShifts) {
+let len = str.length - rightShifts;
+return shiftLeft(str, len);
+}
+
 function generateRandomIntegerRGB() {
   randomValue = generatorRandom(255 + 1);
   return randomValue < 1 ? 1 : randomValue;

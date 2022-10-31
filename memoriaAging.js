@@ -74,7 +74,7 @@ class claseMemoriaAging {
       for (let i = 0; i < tamano; i++) {
         this.MMU[this.MMU.length - 1].paginas.push({
           espacioEnMemoria: -1,
-          contador: 100,
+          contador: "0000000000",
         });
       }
     } else {
@@ -89,8 +89,16 @@ class claseMemoriaAging {
       for (let i = 0; i < tamano; i++) {
         this.MMU[this.MMU.length - 1].paginas.push({
           espacioEnMemoria: -1,
-          contador: 100,
+          contador: "0000000000",
         });
+      }
+    }
+
+    for (let i = 0; i < this.MMU.length; i++) {
+      for (let j = 0; j < this.MMU[i].paginas.length; j++) {
+        if (this.MMU[i].paginas[j].espacioEnMemoria !== -1) {
+          this.MMU[i].paginas[j].contador = shiftString(this.MMU[i].paginas[j].contador, 0, 1);
+        }
       }
     }
 
@@ -98,11 +106,12 @@ class claseMemoriaAging {
     for (let i = 0; i < this.MMU.length; i++) {
       if (this.MMU[i].id === puntero) {
         for (let j = 0; j < this.MMU[i].paginas.length; j++) {
+          let bit = this.MMU[i].paginas[j].contador[0]
+          let new_contador = this.MMU[i].paginas[j].contador.replace(bit, '1');
+          this.MMU[i].paginas[j].contador = new_contador;
           if (this.MMU[i].paginas[j].espacioEnMemoria === -1) {
             if (this.RAM.indexOf(0) !== -1) {
               this.MMU[i].paginas[j].espacioEnMemoria = this.RAM.indexOf(0);
-              // this.colaDePaginas.push(this.RAM.indexOf(0));
-              this.MMU[i].paginas[j].contador = parseInt(this.MMU[i].paginas[j].contador / 2);
               this.RAM[this.RAM.indexOf(0)] = parseInt(procesoID);
               this.cantidadDeFallosDePagina++;
             } else {
@@ -110,10 +119,6 @@ class claseMemoriaAging {
               this.MMU[i].paginas[j].espacioEnMemoria = indiceDeCambio;
               this.cantidadDeFallosDePagina++;
             }
-          } else {
-            this.MMU[i].paginas[j].contador += 100;
-            // this.colaDePaginas.splice(this.MMU[i].paginas[j].espacioEnMemoria,1);
-            // this.colaDePaginas.push(this.RAM[this.MMU[i].paginas[j].espacioEnMemoria]);
           }
         }
         break;
@@ -132,37 +137,47 @@ class claseMemoriaAging {
     let max = Number.MAX_VALUE;
     let indicesDeCambio = [];
     let indiceDeCambio = -1;
+    let contador = 0;
+
     for (let element1 in this.MMU) {
       for (let element2 in this.MMU[element1].paginas) {
-        if (
-          this.MMU[element1].paginas[element2].contador < max &&
-          this.MMU[element1].paginas[element2].espacioEnMemoria !== -1
-        ) {
-          indicesDeCambio = [];
-          indicesDeCambio.push(this.MMU[element1].paginas[element2].espacioEnMemoria);
-          max = this.MMU[element1].paginas[element2].contador;
-        } else if (
-          this.MMU[element1].paginas[element2].contador === max &&
-          this.MMU[element1].paginas[element2].espacioEnMemoria !== -1
-        ) {
-          indicesDeCambio.push(this.MMU[element1].paginas[element2].espacioEnMemoria);
+        if (this.MMU[element1].paginas[element2].espacioEnMemoria !== -1) {
+          console.log(this.MMU[element1].paginas[element2].contador, contador);
+          contador += 1;
+          if (
+            parseInt(this.MMU[element1].paginas[element2].contador, 2) < max
+          ) {
+            indicesDeCambio = [];
+            indicesDeCambio.push(
+              this.MMU[element1].paginas[element2].espacioEnMemoria
+            );
+            max = parseInt(this.MMU[element1].paginas[element2].contador, 2);
+          } else if (
+            parseInt(this.MMU[element1].paginas[element2].contador, 2) === max
+          ) {
+            indicesDeCambio.push(
+              this.MMU[element1].paginas[element2].espacioEnMemoria
+            );
+          }
         }
       }
     }
+
+    console.log(indicesDeCambio);
 
     if (indicesDeCambio.length === 1) {
       indiceDeCambio = indicesDeCambio[0];
     } else {
       let random = Math.floor(Math.random() * indicesDeCambio.length);
-      indiceDeCambio = indicesDeCambio[random];
+      indiceDeCambio = indicesDeCambio[0];
     }
 
     for (let element1 in this.MMU) {
       for (let element2 in this.MMU[element1].paginas) {
         if (this.MMU[element1].paginas[element2].espacioEnMemoria === indiceDeCambio) {
           this.MMU[element1].paginas[element2].espacioEnMemoria = -1;
-          this.MMU[element1].paginas[element2].contador = 100;
-          this.RAM[indiceDeCambio] = nuevoProceso;
+          this.MMU[element1].paginas[element2].contador = "0000000000";
+      this.RAM[indiceDeCambio] = nuevoProceso;
           return indiceDeCambio;
         }
       }
