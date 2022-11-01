@@ -165,8 +165,8 @@ class claseMemoriaOptima {
     let verde = [150, 255, 150];
     let rojo = [255, 150, 150];
     let posicionX, posiciony;
-    this.tipo === "Óptimo" ? (posicionX = width / 2 - 1000) : (posicionX = width / 2);
-    posiciony = 1000;
+    this.tipo === "Óptimo" ? (posicionX = width / 2 - 900) : (posicionX = width / 2 + 105);
+    posiciony = 900;
     noFill();
     rect(posicionX, posiciony, 600, 75);
     line(posicionX, posiciony + 25, posicionX + 600, posiciony + 25);
@@ -246,7 +246,7 @@ class claseMemoriaOptima {
   construirTabla(){
     let div = createDiv("")
     div.style("font-size", "16px");
-    div.position(100, 200);
+    div.position(350, 200);
     div.class("scrollable-table");
     div.html(this.generarDatosTabla())
     this.divTabla = div;
