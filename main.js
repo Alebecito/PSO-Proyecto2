@@ -3,6 +3,10 @@ function setup() {
   //Convirtiendo memoria inicial en un diccionario lógico
   mapearMemoriaTotal();
   mapearListaDeAccesos();
+  for (let element of memorias) {
+    element.construirTabla();
+    
+  }
   console.log("Memoria Total ", memoriaTotal);
   console.log("Lista De Accesos ", listaDeAccesos);
 }
@@ -26,6 +30,8 @@ function draw() {
   for (let element of memorias) {
     element.dibujarMemoria();
     element.dibujarEstadoDeMemoria();
+    element.dibujarTabla();
+    
   }
   if (frameCount % 60 == 0) {
     if (listaDeAccesos.length > 0) {

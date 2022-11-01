@@ -6,7 +6,7 @@ const memoriaRandom = new claseMemoriaRandom("Random");
 const memoriaLRU = new claseMemoriaLRU("LRU");
 const memoriaAging = new claseMemoriaAging("Aging");
 const memoriaSecondChance = new claseMemoriaSecondChance("Second Chance");
-const memorias = [memoriaOptima, memoriaAging];
+const memorias = [memoriaOptima, memoriaSecondChance];
 let tablaDeProcesos = [];
 
 generatorRandom = SeedRandom(1); //El 10 es el seed
@@ -25,16 +25,16 @@ function obtenerRGB(proceso) {
 
 function shiftString(str, leftShifts, rightShifts) {
   str = shiftLeft(str, leftShifts);
-  return shiftRight(str,  rightShifts);
+  return shiftRight(str, rightShifts);
 }
 
 function shiftLeft(str, leftShifts) {
-return str.substring(leftShifts) + str.substring(0, leftShifts);
+  return str.substring(leftShifts) + str.substring(0, leftShifts);
 }
 
-function shiftRight(str,  rightShifts) {
-let len = str.length - rightShifts;
-return shiftLeft(str, len);
+function shiftRight(str, rightShifts) {
+  let len = str.length - rightShifts;
+  return shiftLeft(str, len);
 }
 
 function generateRandomIntegerRGB() {
@@ -177,45 +177,44 @@ function mapearMemoriaTotal() {
   memoriaTotal = objetoAuxiliar.slice(0);
 }
 
-function mapearListaDeAccesos(){
+function mapearListaDeAccesos() {
   let cantidadAleatoria = 0;
   let objetoAuxiliar = [];
   let arregloAuxiliar = [];
   listaDeAccesos = listaDeAccesos.slice(1);
   for (let element in listaDeAccesos) {
     arregloAuxiliar = listaDeAccesos[element].split(",");
-    objetoAuxiliar.push(arregloAuxiliar[1].trim(),);
+    objetoAuxiliar.push(arregloAuxiliar[1].trim());
   }
   listaDeAccesos = objetoAuxiliar.slice(0);
-  arregloAuxiliar=[];
-  for(let element in listaDeAccesos){
-    cantidadAleatoria= generateRandomInteger(10, 1);
-    for(let i=0; i<cantidadAleatoria; i++){
+  arregloAuxiliar = [];
+  for (let element in listaDeAccesos) {
+    cantidadAleatoria = generateRandomInteger(10, 1);
+    for (let i = 0; i < cantidadAleatoria; i++) {
       arregloAuxiliar.push(listaDeAccesos[element]);
     }
   }
-  arregloAuxiliar=revolverArreglo(arregloAuxiliar);
+  arregloAuxiliar = revolverArreglo(arregloAuxiliar);
 
   listaDeAccesos = arregloAuxiliar.slice(0);
 }
 
-
 function revolverArreglo(inputArray) {
-  let currentIndex = inputArray.length,  randomIndex;
+  let currentIndex = inputArray.length,
+    randomIndex;
 
   // While there remain elements to shuffle.
   while (currentIndex != 0) {
-
     // Pick a remaining element.
     randomIndex = generateRandomInteger(currentIndex, 0);
     currentIndex--;
 
     // And swap it with the current element.
     [inputArray[currentIndex], inputArray[randomIndex]] = [
-      inputArray[randomIndex], inputArray[currentIndex]];
+      inputArray[randomIndex],
+      inputArray[currentIndex],
+    ];
   }
 
   return inputArray;
 }
-
-

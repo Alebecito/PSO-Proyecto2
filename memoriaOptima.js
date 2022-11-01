@@ -5,20 +5,18 @@ class claseMemoriaOptima {
     this.RAM = this.memoriaDisponible = Array(100).fill(0);
     this.memoriaAsignada = [];
     this.cantidadDeFallosDePagina = 0;
-    this.procesosCorriendo=0;
-    this.tiempoDeSimulacion=0;
-    this.RAMutilizadaKB=0;
-    this.RAMutilizadaPorcentaje=0;
-    this.VRAMutilizadaKB=0;
-    this.VRAMutilizadaPorcentaje=0;
-    this.paginasCargadas=0;
-    this.pagindasNoCargadas=0;
-    this.trashingTiempo=0;
-    this.trashingPorcentaje=0;
-    this.fragmentacionInternar=0;
-    
+    this.procesosCorriendo = 0;
+    this.tiempoDeSimulacion = 0;
+    this.RAMutilizadaKB = 0;
+    this.RAMutilizadaPorcentaje = 0;
+    this.VRAMutilizadaKB = 0;
+    this.VRAMutilizadaPorcentaje = 0;
+    this.paginasCargadas = 0;
+    this.pagindasNoCargadas = 0;
+    this.trashingTiempo = 0;
+    this.trashingPorcentaje = 0;
+    this.fragmentacionInternar = 0;
   }
-
 
   solicitarInstruccion(puntero, procesoID) {
     let flagEnMemoriaAsignada = false;
@@ -167,68 +165,67 @@ class claseMemoriaOptima {
     let verde = [150, 255, 150];
     let rojo = [255, 150, 150];
     let posicionX, posiciony;
-    this.tipo==="Óptimo"?posicionX=width/2-1000:posicionX=width/2;
-    posiciony=1000;
+    this.tipo === "Óptimo" ? (posicionX = width / 2 - 1000) : (posicionX = width / 2);
+    posiciony = 1000;
     noFill();
     rect(posicionX, posiciony, 600, 75);
-    line(posicionX, posiciony+25, posicionX+600, posiciony+25);
-    line(posicionX+300, posiciony, posicionX+300, posiciony+75);
+    line(posicionX, posiciony + 25, posicionX + 600, posiciony + 25);
+    line(posicionX + 300, posiciony, posicionX + 300, posiciony + 75);
     fill(0);
     textSize(15);
-    text("Processes", posicionX+100, posiciony+20);
-    text(this.procesosCorriendo, posicionX+125, posiciony+60);
-    text("Sim - Time", posicionX+420, posiciony+20);
-    text(this.tiempoDeSimulacion+"s", posicionX+420, posiciony+60);
- 
-//-------------------------------------------------
+    text("Processes", posicionX + 100, posiciony + 20);
+    text(this.procesosCorriendo, posicionX + 125, posiciony + 60);
+    text("Sim - Time", posicionX + 420, posiciony + 20);
+    text(this.tiempoDeSimulacion + "s", posicionX + 420, posiciony + 60);
+
+    //-------------------------------------------------
     noFill();
-    rect(posicionX, posiciony+100, 600, 75);
-    line(posicionX, posiciony+125, posicionX+600, posiciony+125);
-    line(posicionX+300, posiciony+100, posicionX+300, posiciony+175);
-    line(posicionX+150, posiciony+100, posicionX+150, posiciony+175);
-    line(posicionX+450, posiciony+100, posicionX+450, posiciony+175);
+    rect(posicionX, posiciony + 100, 600, 75);
+    line(posicionX, posiciony + 125, posicionX + 600, posiciony + 125);
+    line(posicionX + 300, posiciony + 100, posicionX + 300, posiciony + 175);
+    line(posicionX + 150, posiciony + 100, posicionX + 150, posiciony + 175);
+    line(posicionX + 450, posiciony + 100, posicionX + 450, posiciony + 175);
     fill(0);
     textSize(15);
-    text("RAM KB", posicionX+50, posiciony+120);
-    text(this.RAMutilizadaKB, posicionX+70, posiciony+160);
-    text("RAM %", posicionX+200, posiciony+120);
-    text(this.RAMutilizadaPorcentaje, posicionX+220, posiciony+160);
-    text("V-RAM KB", posicionX+350, posiciony+120);
-    text(this.VRAMutilizadaKB, posicionX+365, posiciony+160);
-    text("V-RAM %", posicionX+500, posiciony+120);
-    text(this.VRAMutilizadaPorcentaje, posicionX+525, posiciony+160);
+    text("RAM KB", posicionX + 50, posiciony + 120);
+    text(this.RAMutilizadaKB, posicionX + 70, posiciony + 160);
+    text("RAM %", posicionX + 200, posiciony + 120);
+    text(this.RAMutilizadaPorcentaje, posicionX + 220, posiciony + 160);
+    text("V-RAM KB", posicionX + 350, posiciony + 120);
+    text(this.VRAMutilizadaKB, posicionX + 365, posiciony + 160);
+    text("V-RAM %", posicionX + 500, posiciony + 120);
+    text(this.VRAMutilizadaPorcentaje, posicionX + 525, posiciony + 160);
 
     //---------------------------------------------------
     noFill();
-    rect(posicionX, posiciony+200, 600, 75);
-    fill(verde[0],verde[1],verde[2]);
-    rect(posicionX+300, posiciony+200, 150, 75);
+    rect(posicionX, posiciony + 200, 600, 75);
+    fill(verde[0], verde[1], verde[2]);
+    rect(posicionX + 300, posiciony + 200, 150, 75);
     noFill();
-    line(posicionX, posiciony+225, posicionX+600, posiciony+225);
-    line(posicionX, posiciony+250, posicionX+300, posiciony+250);
-    line(posicionX+300, posiciony+200, posicionX+300, posiciony+275);
-    line(posicionX+150, posiciony+225, posicionX+150, posiciony+275);
-    line(posicionX+450, posiciony+200, posicionX+450, posiciony+275);
-    line(posicionX+375, posiciony+225, posicionX+375, posiciony+275);
+    line(posicionX, posiciony + 225, posicionX + 600, posiciony + 225);
+    line(posicionX, posiciony + 250, posicionX + 300, posiciony + 250);
+    line(posicionX + 300, posiciony + 200, posicionX + 300, posiciony + 275);
+    line(posicionX + 150, posiciony + 225, posicionX + 150, posiciony + 275);
+    line(posicionX + 450, posiciony + 200, posicionX + 450, posiciony + 275);
+    line(posicionX + 375, posiciony + 225, posicionX + 375, posiciony + 275);
 
     fill(0);
     textSize(15);
-    text("Pages", posicionX+120, posiciony+220);
+    text("Pages", posicionX + 120, posiciony + 220);
     textSize(13);
-    text("Fragmentation", posicionX+480, posiciony+220);
+    text("Fragmentation", posicionX + 480, posiciony + 220);
     textSize(15);
-    text(this.fragmentacionInternar+"KB", posicionX+520, posiciony+260);
-    text(this.trashingPorcentaje+"%", posicionX+400, posiciony+260);
-    text("Trashing", posicionX+350, posiciony+220);
-    text(this.trashingTiempo+"s", posicionX+325, posiciony+260);
-    text("Loaded", posicionX+50, posiciony+245);
-    text(this.paginasCargadas, posicionX+70, posiciony+270);
-    text("Unloaded", posicionX+200, posiciony+245);
-    text(this.pagindasNoCargadas, posicionX+220, posiciony+270);
-//-----------------------------------------------------
+    text(this.fragmentacionInternar + "KB", posicionX + 520, posiciony + 260);
+    text(this.trashingPorcentaje + "%", posicionX + 400, posiciony + 260);
+    text("Trashing", posicionX + 350, posiciony + 220);
+    text(this.trashingTiempo + "s", posicionX + 325, posiciony + 260);
+    text("Loaded", posicionX + 50, posiciony + 245);
+    text(this.paginasCargadas, posicionX + 70, posiciony + 270);
+    text("Unloaded", posicionX + 200, posiciony + 245);
+    text(this.pagindasNoCargadas, posicionX + 220, posiciony + 270);
+    //-----------------------------------------------------
   }
 
-  
   dibujarMemoria() {
     let RGB = [];
     let posiciony = 0;
@@ -246,7 +243,70 @@ class claseMemoriaOptima {
       rect(width / 2 - 1000 + i * 20, posiciony, 20, 25);
     }
   }
+  construirTabla(){
+    let div = createDiv("")
+    div.style("font-size", "16px");
+    div.position(100, 200);
+    div.class("scrollable-table");
+    div.html(this.generarDatosTabla())
+    this.divTabla = div;
+  }
+
+  dibujarTabla() {   
+    this.divTabla.html(this.generarDatosTabla());  
+  }
+  
+  generarDatosTabla() {
+    let data = [{"PageID":1, 
+                 "PID":1,
+                 "Loaded":"X",
+                 "L_ADDR":0,
+                 "M_ADDR":0,
+                 "D_ADDR":12,
+                 "Loaded_T":0,
+                 "Mark":"X",
+                 "Color":"#FF0000"},
+                 {"PageID":2, 
+                 "PID":2,
+                 "Loaded":"X",
+                 "L_ADDR":0,
+                 "M_ADDR":0,
+                 "D_ADDR":12,
+                 "Loaded_T":0,
+                 "Mark":"X",
+                 "Color":"#151"}];
+    let tableHeaders =
+      "<div>" +
+        "<table>" +
+          "<thead>" +
+          "<tr >" +
+            "<th>PAGE ID</th>" +
+            "<th>PID</th>" +
+            "<th>LOADED</th>" +
+            "<th>L-ADDR</th>" +
+            "<th>M-ADDR</th>" +
+            "<th>D-ADDR</th>" +
+            "<th>LOADED-T</th>" +
+            "<th>MARK </th>"+
+          "</tr>";
+          "</thead>";
+          "<tbody>";
+      let tableRows = "";
+      for (let i = 0; i < data.length; i++) {
+        tableRows +=
+          "<tr bgcolor=" + data[i].Color + ">" +
+            "<td>" + data[i].PageID + "</td>" +
+            "<td>" + data[i].PID + "</td>" +
+            "<td>" + data[i].Loaded + "</td>" +
+            "<td>" + data[i].L_ADDR + "</td>" +
+            "<td>" + data[i].M_ADDR + "</td>" +
+            "<td>" + data[i].D_ADDR + "</td>" +
+            "<td>" + data[i].Loaded_T + "</td>" +
+            "<td>" + this.cantidadDeFallosDePagina + "</td>" +
+          "</tr>";
+      }
+    let tableFooter = "</tbody></table></div>";
+    let table = tableHeaders + tableRows + tableFooter;
+    return table;
+  }
 }
-
-
-

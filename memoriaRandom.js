@@ -217,4 +217,71 @@ class claseMemoriaRandom {
     text(this.pagindasNoCargadas, posicionX+220, posiciony+270);
 //-----------------------------------------------------
   }
+
+  construirTabla(){
+    let div = createDiv("")
+    div.style("font-size", "16px");
+    div.position(1200, 200);
+    div.class("scrollable-table");
+    div.html(this.generarDatosTabla())
+    this.divTabla = div;
+  }
+
+  dibujarTabla() {   
+    this.divTabla.html(this.generarDatosTabla());  
+  }
+  
+  generarDatosTabla() {
+    let data = [{"PageID":1, 
+                 "PID":1,
+                 "Loaded":"X",
+                 "L_ADDR":0,
+                 "M_ADDR":0,
+                 "D_ADDR":12,
+                 "Loaded_T":0,
+                 "Mark":"X",
+                 "Color":"#FF0000"},
+                 {"PageID":2, 
+                 "PID":2,
+                 "Loaded":"X",
+                 "L_ADDR":0,
+                 "M_ADDR":0,
+                 "D_ADDR":12,
+                 "Loaded_T":0,
+                 "Mark":"X",
+                 "Color":"#151"}];
+    let tableHeaders =
+      "<div>" +
+        "<table>" +
+          "<thead>" +
+          "<tr >" +
+            "<th>PAGE ID</th>" +
+            "<th>PID</th>" +
+            "<th>LOADED</th>" +
+            "<th>L-ADDR</th>" +
+            "<th>M-ADDR</th>" +
+            "<th>D-ADDR</th>" +
+            "<th>LOADED-T</th>" +
+            "<th>MARK </th>"+
+          "</tr>";
+          "</thead>";
+          "<tbody>";
+      let tableRows = "";
+      for (let i = 0; i < data.length; i++) {
+        tableRows +=
+          "<tr bgcolor=" + data[i].Color + ">" +
+            "<td>" + data[i].PageID + "</td>" +
+            "<td>" + data[i].PID + "</td>" +
+            "<td>" + data[i].Loaded + "</td>" +
+            "<td>" + data[i].L_ADDR + "</td>" +
+            "<td>" + data[i].M_ADDR + "</td>" +
+            "<td>" + data[i].D_ADDR + "</td>" +
+            "<td>" + data[i].Loaded_T + "</td>" +
+            "<td>" + this.cantidadDeFallosDePagina + "</td>" +
+          "</tr>";
+      }
+    let tableFooter = "</tbody></table></div>";
+    let table = tableHeaders + tableRows + tableFooter;
+    return table;
+  }
 }
