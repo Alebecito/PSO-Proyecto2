@@ -4,6 +4,7 @@ class claseMemoriaAging {
     this.MMU = [];
     this.RAM = this.memoriaDisponible = Array(100).fill(0);
     this.memoriaAsignada = [];
+    this.colaDePaginas = [];
     this.cantidadDeFallosDePagina = 0;
     this.procesosCorriendo = 0;
     this.tiempoDeSimulacion = 0;
@@ -107,6 +108,7 @@ class claseMemoriaAging {
       if (this.MMU[i].id === puntero) {
         for (let j = 0; j < this.MMU[i].paginas.length; j++) {
           if (this.MMU[i].paginas[j].espacioEnMemoria === -1) {
+            this.colaDePaginas.push(this.RAM.indexOf(0));
             let bit = this.MMU[i].paginas[j].contador[0];
             let new_contador = this.MMU[i].paginas[j].contador.replace(bit, "1");
             this.MMU[i].paginas[j].contador = new_contador;
@@ -119,13 +121,16 @@ class claseMemoriaAging {
               this.MMU[i].paginas[j].espacioEnMemoria = indiceDeCambio;
               this.cantidadDeFallosDePagina++;
             }
+          } else {
+            this.colaDePaginas.splice(this.MMU[i].paginas[j].espacioEnMemoria, 1);
+            this.colaDePaginas.push(this.RAM[this.MMU[i].paginas[j].espacioEnMemoria]);
           }
         }
         break;
       }
     }
     //   console.log("Memoria Asignada", this.memoriaAsignada);
-    //   console.log("MMU ", this.MMU);
+    //   console.log`("MMU ", this.MMU);
     //   console.log("RAM ", this.RAM);
     //   console.log("tabla de proceso", tablaDeProcesos);
     //   console.log("-------------------------------------------------");
@@ -142,7 +147,6 @@ class claseMemoriaAging {
     for (let element1 in this.MMU) {
       for (let element2 in this.MMU[element1].paginas) {
         if (this.MMU[element1].paginas[element2].espacioEnMemoria !== -1) {
-          console.log(this.MMU[element1].paginas[element2].contador, contador);
           contador += 1;
           if (parseInt(this.MMU[element1].paginas[element2].contador, 2) < max) {
             indicesDeCambio = [];
@@ -155,14 +159,17 @@ class claseMemoriaAging {
       }
     }
 
-    console.log(indicesDeCambio);
-
-    if (indicesDeCambio.length === 1) {
-      indiceDeCambio = indicesDeCambio[0];
-    } else {
-      let random = Math.floor(Math.random() * indicesDeCambio.length);
-      indiceDeCambio = indicesDeCambio[0];
+    let min = Number.MAX_VALUE;
+    for (let i = 0; i < indicesDeCambio.length; i++) {
+      if (this.colaDePaginas.indexOf(indicesDeCambio[i]) < min) {
+        min = this.colaDePaginas.indexOf(indicesDeCambio[i]);
+        indiceDeCambio = indicesDeCambio[i];
+      }
     }
+    
+    const idx = this.colaDePaginas.indexOf(indiceDeCambio);
+    this.colaDePaginas.splice(idx, 1);
+    this.colaDePaginas.push(indiceDeCambio);
 
     for (let element1 in this.MMU) {
       for (let element2 in this.MMU[element1].paginas) {
@@ -184,7 +191,7 @@ class claseMemoriaAging {
         paginasABorrar.push(index);
       }
     }
-    //   this.colaDePaginas = this.colaDePaginas.filter(item => paginasABorrar.indexOf(item) === -1);
+      this.colaDePaginas = this.colaDePaginas.filter(item => paginasABorrar.indexOf(item) === -1);
   }
 
   eliminarDeMMUyMemoriaAsignada(proceso) {

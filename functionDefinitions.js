@@ -6,7 +6,7 @@ const memoriaRandom = new claseMemoriaRandom("Random");
 const memoriaLRU = new claseMemoriaLRU("LRU");
 const memoriaAging = new claseMemoriaAging("Aging");
 const memoriaSecondChance = new claseMemoriaSecondChance("Second Chance");
-const memorias = [memoriaOptima, memoriaSecondChance];
+const memorias = [memoriaOptima, memoriaAging];
 let tablaDeProcesos = [];
 
 generatorRandom = SeedRandom(1); //El 10 es el seed
