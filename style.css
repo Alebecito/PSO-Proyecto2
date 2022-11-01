@@ -45,6 +45,10 @@ td {
   text-align: center;
 }
 
+table, th, td {
+  border: 1px solid black;
+}
+
 /* Basic Demo styling */
 table {
   width: 100%;
