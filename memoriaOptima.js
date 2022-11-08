@@ -17,7 +17,7 @@ class claseMemoriaOptima {
     this.trashingPorcentaje = 0;
     this.fragmentacionInternar = [];
     this.listaDePaginasDecargadas = [];
-    this.espacioLogico = 0;
+    this.idPagina = 0;
   }
 
   tiempoPaginaCargada(time){
@@ -88,7 +88,7 @@ class claseMemoriaOptima {
           espacioEnMemoria: -1,
           marcado: false,
           identificadorUnico: uid(),
-          espacioLogico: this.espacioLogico++,
+          idPagina: this.idPagina++,
           tiempoCargado: 0,
         });
       }
@@ -106,7 +106,7 @@ class claseMemoriaOptima {
           espacioEnMemoria: -1,
           marcado: false,
           identificadorUnico: uid(),
-          espacioLogico: this.espacioLogico++,
+          idPagina: this.idPagina++,
           tiempoCargado: 0,
         });
       }
@@ -371,10 +371,10 @@ class claseMemoriaOptima {
 
     for (let i = 0; i< this.MMU.length; i++) {
       for (let j = 0; j < this.MMU[i].paginas.length; j++) {
-        let page = {"PageID":this.MMU[i].paginas[j].espacioLogico, 
+        let page = {"PageID":this.MMU[i].paginas[j].idPagina, 
         "PID":tablaDeProcesos[i].idProceso,
         "Loaded": this.MMU[i].paginas[j].espacioEnMemoria != -1 ? "X" : " ",
-        "L_ADDR": this.MMU[i].paginas[j].espacioLogico,
+        "L_ADDR": this.MMU[i].id,
         "M_ADDR": this.MMU[i].paginas[j].espacioEnMemoria != -1 ? this.MMU[i].paginas[j].espacioEnMemoria : -1,
         "D_ADDR":12,
         "Loaded_T": this.MMU[i].paginas[j].tiempoCargado,
