@@ -9,13 +9,14 @@ function setup() {
   }
   console.log("Memoria Total ", memoriaTotal);
   console.log("Lista De Accesos ", listaDeAccesos);
+  
 }
 
 function draw() {
   let procesoSolicitado;
   let punteroActual = listaDeAccesos[0];
   procesoSolicitado = procesoDePuntero(punteroActual);
-  if (verificarSiProcesoEnTabla(parseInt(procesoSolicitado)) === false) {
+  if (verificarSiProcesoEnTabla(parseInt(procesoSolicitado)) === false && listaDeAccesos.length > 0) {
     tablaDeProcesos.push({
       idProceso: parseInt(procesoSolicitado),
       accesoCompletado: false,

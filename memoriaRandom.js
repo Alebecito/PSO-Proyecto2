@@ -16,6 +16,7 @@ class claseMemoriaRandom {
     this.trashingTiempo=0;
     this.trashingPorcentaje=0;
     this.fragmentacionInternar=0;
+    this.listaDePaginasDecargadas = [];
   }
 
   dibujarMemoria() {
@@ -75,6 +76,8 @@ class claseMemoriaRandom {
         this.MMU[this.MMU.length - 1].paginas.push({
           espacioEnMemoria: -1,
           marcado: false,
+          identificadorUnico: uid()
+
         });
       }
     } else {
@@ -90,6 +93,8 @@ class claseMemoriaRandom {
         this.MMU[this.MMU.length - 1].paginas.push({
           espacioEnMemoria: -1,
           marcado: false,
+          identificadorUnico: uid()
+
         });
       }
     }
@@ -103,12 +108,19 @@ class claseMemoriaRandom {
               this.MMU[i].paginas[j].espacioEnMemoria = this.RAM.indexOf(0);
               this.RAM[this.RAM.indexOf(0)] = parseInt(procesoID);
               this.cantidadDeFallosDePagina++;
+              this.tiempoDeSimulacion+=5;
+              this.trashingTiempo+=5;
+
             } else {
               let indiceDeCambio = this.paginarMemoria(parseInt(procesoID));
               this.MMU[i].paginas[j].espacioEnMemoria = indiceDeCambio;
               this.cantidadDeFallosDePagina++;
+              this.tiempoDeSimulacion+=5;
+              this.trashingTiempo+=5;
+
             }
           }
+          this.tiempoDeSimulacion+=1;
         }
         break;
       }
@@ -118,6 +130,35 @@ class claseMemoriaRandom {
     //   console.log("RAM ", this.RAM);
     //   console.log("tabla de proceso", tablaDeProcesos);
     //   console.log("-------------------------------------------------");
+  }
+
+  revisarSiPaginaDescargada(paginaP){
+    for (let i = 0; i < this.listaDePaginasDecargadas.length; i++) {
+      if (this.listaDePaginasDecargadas[i].pagina === paginaP) {
+        return true;
+      }
+    }
+    return false;
+  }
+  eliminarPaginasDeProceso(procesoID) {
+    for(let i=0; this.listaDePaginasDecargadas.length; i++){
+      if(this.listaDePaginasDecargadas[i].idProceso === procesoID){
+        this.listaDePaginasDecargadas.splice(i,1);
+      }
+    }
+  }
+  meterEnPaginasDecargadas(procesoID, paginaP) {
+    this.listaDePaginasDecargadas.push({proceso:procesoID, pagina:paginaP});
+  }
+
+  sacarDePaginasDescargada(paginaP){
+    for (let i = 0; i < this.listaDePaginasDecargadas.length; i++) {
+      if (this.listaDePaginasDecargadas[i].pagina === paginaP) {
+        this.listaDePaginasDecargadas.splice(i, 1);
+        break;
+      }
+    }
+    
   }
 
   paginarMemoria(nuevoProceso) {
@@ -152,9 +193,10 @@ class claseMemoriaRandom {
         this.memoriaAsignada.splice(i, 1);
       }
     }
+    this.eliminarPaginasDeProceso(proceso);
   }
   dibujarEstadoDeMemoria() {
-    let verde = [150, 255, 150];
+    let verde = [255, 255, 255];
     let rojo = [255, 150, 150];
     let posicionX, posiciony;
     this.tipo === "Óptimo" ? (posicionX = width / 2 - 900) : (posicionX = width / 2 + 105);
@@ -166,6 +208,7 @@ class claseMemoriaRandom {
     fill(0);
     textSize(15);
     text("Processes", posicionX+100, posiciony+20);
+    this.procesosCorriendo= tablaDeProcesos.length;
     text(this.procesosCorriendo, posicionX+125, posiciony+60);
     text("Sim - Time", posicionX+420, posiciony+20);
     text(this.tiempoDeSimulacion+"s", posicionX+420, posiciony+60);
@@ -180,8 +223,10 @@ class claseMemoriaRandom {
     fill(0);
     textSize(15);
     text("RAM KB", posicionX+50, posiciony+120);
+    this.RAMutilizadaKB = 400-getOccurrence(this.RAM, 0) * 4;
     text(this.RAMutilizadaKB, posicionX+70, posiciony+160);
     text("RAM %", posicionX+200, posiciony+120);
+    this.RAMutilizadaPorcentaje = (this.RAMutilizadaKB / 400) * 100;
     text(this.RAMutilizadaPorcentaje, posicionX+220, posiciony+160);
     text("V-RAM KB", posicionX+350, posiciony+120);
     text(this.VRAMutilizadaKB, posicionX+365, posiciony+160);
@@ -191,7 +236,7 @@ class claseMemoriaRandom {
     //---------------------------------------------------
     noFill();
     rect(posicionX, posiciony+200, 600, 75);
-    fill(verde[0],verde[1],verde[2]);
+    this.trashingPorcentaje>mitad?fill(rojo[0], rojo[1], rojo[2]):fill(verde[0], verde[1], verde[2]);
     rect(posicionX+300, posiciony+200, 150, 75);
     noFill();
     line(posicionX, posiciony+225, posicionX+600, posiciony+225);
@@ -208,10 +253,13 @@ class claseMemoriaRandom {
     text("Fragmentation", posicionX+480, posiciony+220);
     textSize(15);
     text(this.fragmentacionInternar+"KB", posicionX+520, posiciony+260);
-    text(this.trashingPorcentaje+"%", posicionX+400, posiciony+260);
+    this.trashingPorcentaje = round((this.trashingTiempo*100)/this.tiempoDeSimulacion,2);
+    text(this.trashingPorcentaje + "%", posicionX + 390, posiciony + 260);
     text("Trashing", posicionX+350, posiciony+220);
     text(this.trashingTiempo+"s", posicionX+325, posiciony+260);
     text("Loaded", posicionX+50, posiciony+245);
+    this.paginasCargadas = 100-getOccurrence(this.RAM, 0);
+
     text(this.paginasCargadas, posicionX+70, posiciony+270);
     text("Unloaded", posicionX+200, posiciony+245);
     text(this.pagindasNoCargadas, posicionX+220, posiciony+270);

@@ -1,12 +1,13 @@
 let chronometer = 0;
 let memoriaTotal;
+let mitad = 50.00;
 let listaDeAccesos;
 const memoriaOptima = new claseMemoriaOptima("Óptimo");
 const memoriaRandom = new claseMemoriaRandom("Random");
 const memoriaLRU = new claseMemoriaLRU("LRU");
 const memoriaAging = new claseMemoriaAging("Aging");
 const memoriaSecondChance = new claseMemoriaSecondChance("Second Chance");
-const memorias = [memoriaOptima, memoriaAging];
+const memorias = [memoriaOptima, memoriaRandom];
 let tablaDeProcesos = [];
 
 generatorRandom = SeedRandom(1); //El 10 es el seed
@@ -22,6 +23,11 @@ function obtenerRGB(proceso) {
   }
   return RGB;
 }
+
+function uid() {
+  let uint32 = window.crypto.getRandomValues(new Uint32Array(1))[0];
+  return uint32.toString(16);
+  };
 
 function shiftString(str, leftShifts, rightShifts) {
   str = shiftLeft(str, leftShifts);
@@ -156,6 +162,9 @@ function dibujarCronometro() {
   if (frameCount % 60 == 0) {
     chronometer++;
   }
+}
+function getOccurrence(array, value) {
+  return array.filter((v) => (v === value)).length;
 }
 function preload() {
   memoriaTotal = loadStrings("procesos.txt");
