@@ -17,6 +17,29 @@ class claseMemoriaOptima {
     this.trashingPorcentaje = 0;
     this.fragmentacionInternar = [];
     this.listaDePaginasDecargadas = [];
+    this.espacioLogico = 0;
+  }
+
+  tiempoPaginaCargada(time){
+    for(let i=0;i<this.MMU.length;i++){
+      for(let j=0;j<this.MMU[i].paginas.length;j++){
+        if(this.MMU[i].paginas[j].espacioEnMemoria!==-1){
+          this.MMU[i].paginas[j].tiempoCargado +=time;
+          this.MMU[i].paginas[j].tiempoCargado = round(this.MMU[i].paginas[j].tiempoCargado,2);
+        }
+      }
+    }
+  } 
+
+  RGBtoHex(proceso) {
+    function rgbToHex(rgb) {
+      let hex = Number(rgb).toString(16);
+      if (hex.length < 2) {
+          hex = "0" + hex;
+      }
+      return hex;
+    }
+    return rgbToHex(proceso.R) + rgbToHex(proceso.G) + rgbToHex(proceso.B);
   }
 
   solicitarInstruccion(puntero, procesoID) {
@@ -64,7 +87,9 @@ class claseMemoriaOptima {
         this.MMU[this.MMU.length - 1].paginas.push({
           espacioEnMemoria: -1,
           marcado: false,
-          identificadorUnico: uid()
+          identificadorUnico: uid(),
+          espacioLogico: this.espacioLogico++,
+          tiempoCargado: 0,
         });
       }
     } else {
@@ -80,7 +105,9 @@ class claseMemoriaOptima {
         this.MMU[this.MMU.length - 1].paginas.push({
           espacioEnMemoria: -1,
           marcado: false,
-          identificadorUnico: uid()
+          identificadorUnico: uid(),
+          espacioLogico: this.espacioLogico++,
+          tiempoCargado: 0,
         });
       }
     }
@@ -96,6 +123,7 @@ class claseMemoriaOptima {
               this.cantidadDeFallosDePagina++;
               this.tiempoDeSimulacion+=5;
               this.trashingTiempo+=5;
+              this.tiempoPaginaCargada(5);
             } else {
               let indiceDeCambio = this.paginarMemoria(parseInt(procesoID), puntero);
               this.MMU[i].paginas[j].espacioEnMemoria = indiceDeCambio;
@@ -103,9 +131,11 @@ class claseMemoriaOptima {
               this.cantidadDeFallosDePagina++;
               this.tiempoDeSimulacion+=5;
               this.trashingTiempo+=5;
+              this.tiempoPaginaCargada(5);
             }
           }else{
             this.tiempoDeSimulacion+=1;
+            this.tiempoPaginaCargada(1);
           }
         }
         break;
@@ -337,24 +367,23 @@ class claseMemoriaOptima {
   }
   
   generarDatosTabla() {
-    let data = [{"PageID":1, 
-                 "PID":1,
-                 "Loaded":"X",
-                 "L_ADDR":0,
-                 "M_ADDR":0,
-                 "D_ADDR":12,
-                 "Loaded_T":0,
-                 "Mark":"X",
-                 "Color":"#FF0000"},
-                 {"PageID":2, 
-                 "PID":2,
-                 "Loaded":"X",
-                 "L_ADDR":0,
-                 "M_ADDR":0,
-                 "D_ADDR":12,
-                 "Loaded_T":0,
-                 "Mark":"X",
-                 "Color":"#151"}];
+    let data = [];
+
+    for (let i = 0; i< this.MMU.length; i++) {
+      for (let j = 0; j < this.MMU[i].paginas.length; j++) {
+        let page = {"PageID":this.MMU[i].paginas[j].espacioLogico, 
+        "PID":tablaDeProcesos[i].idProceso,
+        "Loaded": this.MMU[i].paginas[j].espacioEnMemoria != -1 ? "X" : " ",
+        "L_ADDR": this.MMU[i].paginas[j].espacioLogico,
+        "M_ADDR": this.MMU[i].paginas[j].espacioEnMemoria != -1 ? this.MMU[i].paginas[j].espacioEnMemoria : -1,
+        "D_ADDR":12,
+        "Loaded_T": this.MMU[i].paginas[j].tiempoCargado,
+        "Mark":" ",
+        "Color":this.RGBtoHex(tablaDeProcesos[i])};    
+        data.push(page);
+      }
+
+    }
     let tableHeaders =
       "<div>" +
         "<table>" +
@@ -382,7 +411,7 @@ class claseMemoriaOptima {
             "<td>" + data[i].M_ADDR + "</td>" +
             "<td>" + data[i].D_ADDR + "</td>" +
             "<td>" + data[i].Loaded_T + "</td>" +
-            "<td>" + this.cantidadDeFallosDePagina + "</td>" +
+            "<td>" + data[i].Mark+ "</td>" +
           "</tr>";
       }
     let tableFooter = "</tbody></table></div>";

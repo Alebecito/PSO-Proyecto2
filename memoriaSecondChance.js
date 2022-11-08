@@ -19,6 +19,7 @@ class claseMemoriaSecondChance {
     this.fragmentacionInternar = [];
     this.divTabla = undefined;
     this.listaDePaginasDecargadas = [];
+    this.espacioLogico = 0;
   }
 
   dibujarMemoria() {
@@ -91,7 +92,9 @@ class claseMemoriaSecondChance {
         this.MMU[this.MMU.length - 1].paginas.push({
           espacioEnMemoria: -1,
           marcado: false,
-          identificadorUnico: uid()
+          identificadorUnico: uid(),
+          espacioLogico: this.espacioLogico++,
+          tiempoCargado: 0,
 
         });
       }
@@ -108,7 +111,9 @@ class claseMemoriaSecondChance {
         this.MMU[this.MMU.length - 1].paginas.push({
           espacioEnMemoria: -1,
           marcado: false,
-          identificadorUnico: uid()
+          identificadorUnico: uid(),
+          espacioLogico: this.espacioLogico++,
+          tiempoCargado: 0,
 
         });
       }
@@ -127,6 +132,7 @@ class claseMemoriaSecondChance {
               this.RAM[this.RAM.indexOf(0)] = parseInt(procesoID);
               this.cantidadDeFallosDePagina++;
               this.tiempoDeSimulacion+=5;
+              this.tiempoPaginaCargada(5);
               this.trashingTiempo+=5;
 
             } else {
@@ -135,6 +141,7 @@ class claseMemoriaSecondChance {
               this.sacarDePaginasDescargada(this.MMU[i].paginas[j].identificadorUnico);
               this.cantidadDeFallosDePagina++;
               this.tiempoDeSimulacion+=5;
+              this.tiempoPaginaCargada(5);
               this.trashingTiempo+=5;
 
             }
@@ -147,6 +154,7 @@ class claseMemoriaSecondChance {
               (element) => element.espacioEnMemoria === this.MMU[i].paginas[j].espacioEnMemoria
             );
             this.colaDePaginas[index].marcado = true;
+            this.tiempoPaginaCargada(1);
           }
         }
         break;
@@ -258,26 +266,48 @@ class claseMemoriaSecondChance {
   dibujarTabla() {   
     this.divTabla.html(this.generarDatosTabla());  
   }
+
+
+  tiempoPaginaCargada(time){
+    for(let i=0;i<this.MMU.length;i++){
+      for(let j=0;j<this.MMU[i].paginas.length;j++){
+        if(this.MMU[i].paginas[j].espacioEnMemoria!==-1){
+          this.MMU[i].paginas[j].tiempoCargado +=time;
+          this.MMU[i].paginas[j].tiempoCargado = round(this.MMU[i].paginas[j].tiempoCargado,2);
+        }
+      }
+    }
+  } 
+
+  RGBtoHex(proceso) {
+    function rgbToHex(rgb) {
+      let hex = Number(rgb).toString(16);
+      if (hex.length < 2) {
+          hex = "0" + hex;
+      }
+      return hex;
+    }
+    return rgbToHex(proceso.R) + rgbToHex(proceso.G) + rgbToHex(proceso.B);
+  }
   
   generarDatosTabla() {
-    let data = [{"PageID":1, 
-                 "PID":1,
-                 "Loaded":"X",
-                 "L_ADDR":0,
-                 "M_ADDR":0,
-                 "D_ADDR":12,
-                 "Loaded_T":0,
-                 "Mark":"X",
-                 "Color":"#FF0000"},
-                 {"PageID":2, 
-                 "PID":2,
-                 "Loaded":"X",
-                 "L_ADDR":0,
-                 "M_ADDR":0,
-                 "D_ADDR":12,
-                 "Loaded_T":0,
-                 "Mark":"X",
-                 "Color":"#151"}];
+    let data = [];
+
+    for (let i = 0; i< this.MMU.length; i++) {
+      for (let j = 0; j < this.MMU[i].paginas.length; j++) {
+        let page = {"PageID":this.MMU[i].paginas[j].espacioLogico, 
+        "PID":tablaDeProcesos[i].idProceso,
+        "Loaded": this.MMU[i].paginas[j].espacioEnMemoria != -1 ? "X" : " ",
+        "L_ADDR": this.MMU[i].paginas[j].espacioLogico,
+        "M_ADDR": this.MMU[i].paginas[j].espacioEnMemoria != -1 ? this.MMU[i].paginas[j].espacioEnMemoria : " ",
+        "D_ADDR": this.MMU[i].paginas[j].espacioEnMemoria == -1 ? this.MMU[i].paginas[j].espacioLogico+11 : " ",
+        "Loaded_T": this.MMU[i].paginas[j].tiempoCargado,
+        "Mark":this.MMU[i].paginas[j].marcado ? "X" : " ",
+        "Color":this.RGBtoHex(tablaDeProcesos[i])};    
+        data.push(page);
+      }
+
+    }
     let tableHeaders =
       "<div>" +
         "<table>" +
@@ -305,7 +335,7 @@ class claseMemoriaSecondChance {
             "<td>" + data[i].M_ADDR + "</td>" +
             "<td>" + data[i].D_ADDR + "</td>" +
             "<td>" + data[i].Loaded_T + "</td>" +
-            "<td>" + this.cantidadDeFallosDePagina + "</td>" +
+            "<td>" + data[i].Mark+ "</td>" +
           "</tr>";
       }
     let tableFooter = "</tbody></table></div>";

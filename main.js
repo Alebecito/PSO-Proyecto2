@@ -31,8 +31,10 @@ function draw() {
     element.dibujarMemoria();
     element.dibujarEstadoDeMemoria();
     element.dibujarTabla();
+
     
   }
+
   if (frameCount % 60 == 0) {
     if (listaDeAccesos.length > 0) {
       for (let element of memorias) {
