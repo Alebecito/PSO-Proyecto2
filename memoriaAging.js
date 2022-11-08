@@ -16,7 +16,7 @@ class claseMemoriaAging {
     this.pagindasNoCargadas = 0;
     this.trashingTiempo = 0;
     this.trashingPorcentaje = 0;
-    this.fragmentacionInternar = 0;
+    this.fragmentacionInternar = [];
     this.listaDePaginasDecargadas = [];
 
   }
@@ -39,12 +39,25 @@ class claseMemoriaAging {
     }
   }
 
+  calculoFragmentacionInterna(){
+    let suma=0;
+    for(let i=0;i<this.fragmentacionInternar.length;i++){
+      suma+=this.fragmentacionInternar[i].fragmentacion;
+    }
+    return suma;
+  }
+
   solicitarInstruccion(puntero, procesoID) {
     let flagEnMemoriaAsignada = false;
     let flagEnMMU = false;
     let direccionMemoria = -1;
     let tamano = 0;
     tamano = buscarTamanioPuntero(puntero);
+    let decimales = parseFloat(tamano/4096)-parseInt(tamano / 4096)
+    decimales=100-(decimales*100);
+    decimales=(decimales/100) * 4096;
+    decimales=decimales/1024;
+    this.fragmentacionInternar.push({proceso:procesoID, fragmentacion:round(decimales,4)});
     tamano = Math.ceil(parseFloat(tamano) / 4096);
     //Se revisa si tiene memoria asignada ese puntero
     if (this.memoriaAsignada.length === 0) {
@@ -128,6 +141,7 @@ class claseMemoriaAging {
             } else {
               let indiceDeCambio = this.paginarMemoria(parseInt(procesoID));
               this.MMU[i].paginas[j].espacioEnMemoria = indiceDeCambio;
+              this.sacarDePaginasDescargada(this.MMU[i].paginas[j].identificadorUnico);
               this.cantidadDeFallosDePagina++;
               this.tiempoDeSimulacion+=5;
               this.trashingTiempo+=5;
@@ -188,6 +202,7 @@ class claseMemoriaAging {
       for (let element2 in this.MMU[element1].paginas) {
         if (this.MMU[element1].paginas[element2].espacioEnMemoria === indiceDeCambio) {
           this.MMU[element1].paginas[element2].espacioEnMemoria = -1;
+          this.meterEnPaginasDecargadas(nuevoProceso, this.MMU[element1].paginas[element2].identificadorUnico);
           this.MMU[element1].paginas[element2].contador = "0000000000";
           this.RAM[indiceDeCambio] = nuevoProceso;
           return indiceDeCambio;
@@ -196,19 +211,24 @@ class claseMemoriaAging {
     }
   }
 
+  eliminarPaginasDeProceso(procesoID) {
+    
+    for(let i = this.listaDePaginasDecargadas.length - 1; i >= 0; --i){
+      
+      if(this.listaDePaginasDecargadas[i].proceso === procesoID){
+        this.listaDePaginasDecargadas.splice(i, 1);
+      }
+    }
+    
+    
+  }
+
   meterEnPaginasDecargadas(procesoID, paginaP) {
     this.listaDePaginasDecargadas.push({proceso:procesoID, pagina:paginaP});
   }
-  eliminarPaginasDeProceso(procesoID) {
-    for(let i=0; this.listaDePaginasDecargadas.length; i++){
-      if(this.listaDePaginasDecargadas[i].idProceso === procesoID){
-        this.listaDePaginasDecargadas.splice(i,1);
-      }
-    }
-  }
 
   sacarDePaginasDescargada(paginaP){
-    for (let i = 0; i < this.listaDePaginasDecargadas.length; i++) {
+    for (let i = this.listaDePaginasDecargadas.length - 1; i >= 0; --i) {
       if (this.listaDePaginasDecargadas[i].pagina === paginaP) {
         this.listaDePaginasDecargadas.splice(i, 1);
         break;
@@ -248,6 +268,11 @@ class claseMemoriaAging {
         this.memoriaAsignada.splice(i, 1);
       }
     }
+    for (let i = this.fragmentacionInternar.length - 1; i >= 0; --i) {
+      if (parseInt(this.fragmentacionInternar[i].proceso) === parseInt(proceso)) {
+        this.fragmentacionInternar.splice(i, 1);
+      }
+    }
     this.eliminarPaginasDeProceso(proceso);
   }
   dibujarEstadoDeMemoria() {
@@ -281,11 +306,14 @@ class claseMemoriaAging {
     this.RAMutilizadaKB = 400-getOccurrence(this.RAM, 0) * 4;
     text(this.RAMutilizadaKB, posicionX + 70, posiciony + 160);
     text("RAM %", posicionX + 200, posiciony + 120);
-    this.RAMutilizadaPorcentaje = (this.RAMutilizadaKB / 400) * 100;
+    this.RAMutilizadaPorcentaje = round((this.RAMutilizadaKB / 400) * 100,2);
     text(this.RAMutilizadaPorcentaje, posicionX + 220, posiciony + 160);
     text("V-RAM KB", posicionX + 350, posiciony + 120);
+    this.VRAMutilizadaKB  =this.RAMutilizadaKB+this.listaDePaginasDecargadas.length*4;
     text(this.VRAMutilizadaKB, posicionX + 365, posiciony + 160);
     text("V-RAM %", posicionX + 500, posiciony + 120);
+    this.VRAMutilizadaPorcentaje = round((this.VRAMutilizadaKB / 400) * 100,2);
+
     text(this.VRAMutilizadaPorcentaje, posicionX + 525, posiciony + 160);
 
     //---------------------------------------------------
@@ -307,7 +335,7 @@ class claseMemoriaAging {
     textSize(13);
     text("Fragmentation", posicionX + 480, posiciony + 220);
     textSize(15);
-    text(this.fragmentacionInternar + "KB", posicionX + 520, posiciony + 260);
+    text(this.calculoFragmentacionInterna() + "KB", posicionX + 520, posiciony + 260);
     this.trashingPorcentaje = round((this.trashingTiempo*100)/this.tiempoDeSimulacion,2);
     text(this.trashingPorcentaje + "%", posicionX + 390, posiciony + 260);
     text("Trashing", posicionX + 350, posiciony + 220);
@@ -317,6 +345,7 @@ class claseMemoriaAging {
 
     text(this.paginasCargadas, posicionX + 70, posiciony + 270);
     text("Unloaded", posicionX + 200, posiciony + 245);
+    this.pagindasNoCargadas= this.listaDePaginasDecargadas.length;
     text(this.pagindasNoCargadas, posicionX + 220, posiciony + 270);
     //-----------------------------------------------------
   }

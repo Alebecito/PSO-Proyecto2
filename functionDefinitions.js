@@ -10,7 +10,7 @@ const memoriaSecondChance = new claseMemoriaSecondChance("Second Chance");
 const memorias = [memoriaOptima, memoriaRandom];
 let tablaDeProcesos = [];
 
-generatorRandom = SeedRandom(1); //El 10 es el seed
+generatorRandom = SeedRandom(10); //El 10 es el seed
 
 function obtenerRGB(proceso) {
   let RGB = [];
@@ -23,6 +23,8 @@ function obtenerRGB(proceso) {
   }
   return RGB;
 }
+
+
 
 function uid() {
   let uint32 = window.crypto.getRandomValues(new Uint32Array(1))[0];

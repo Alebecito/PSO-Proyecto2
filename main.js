@@ -9,7 +9,7 @@ function setup() {
   }
   console.log("Memoria Total ", memoriaTotal);
   console.log("Lista De Accesos ", listaDeAccesos);
-  
+  listaDeAccesos=["001","002","003","004","005","006","007","008","009","010", "011","012","001","002"];
 }
 
 function draw() {
