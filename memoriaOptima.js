@@ -376,7 +376,7 @@ class claseMemoriaOptima {
         "Loaded": this.MMU[i].paginas[j].espacioEnMemoria != -1 ? "X" : " ",
         "L_ADDR": this.MMU[i].id,
         "M_ADDR": this.MMU[i].paginas[j].espacioEnMemoria != -1 ? this.MMU[i].paginas[j].espacioEnMemoria : -1,
-        "D_ADDR":12,
+        "D_ADDR": this.MMU[i].paginas[j].espacioEnMemoria == -1 ? this.MMU[i].paginas[j].idPagina+11 : " ",
         "Loaded_T": this.MMU[i].paginas[j].tiempoCargado,
         "Mark":" ",
         "Color":this.RGBtoHex(tablaDeProcesos[i])};    
