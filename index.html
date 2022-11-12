@@ -10,6 +10,23 @@
   <body>
     <main>
     </main>
+    <label style = "left:80px; top:2px;" for="fsemilla">Semilla de números Aleatorios (Valor entero):</label>
+    <input style = "left:80px; top:2px;" type="text" id="fsemilla" name="fsemilla">
+
+     <label style = "left:-160px; top:140px;" for="algoritmosSelect">Selección de Algoritmo:</label>
+     <select style = "left:-160px; top:30px;" name="algoritmosSelect" id="algoritmosSelect" onchange="guardarSeleccionAlgoritmo(this.selectedIndex);">
+       <option value="noSelectionOption">--</option>
+       <option value="lruOption">LRU</option>
+       <option value="scOption">Second Chance</option>
+       <option value="agingOption">Aging</option>
+       <option value="randomOption">Random</option>
+     </select>
+
+     <input type="file" accept=".txt" id="archivoProcesos" name="archivoProcesos"/>
+     <button onclick="empezarSimulacion()" style = " left:80px; top:2px;"  type="submit" id="bSimulacion" name="bSimulacion">Empezar Simulación</button>
+
+
+     
     <script src="memoriaAging.js"></script>
     <script src="memoriaLRU.js"></script>
     <script src="memoriaRandom.js"></script>
@@ -17,5 +34,15 @@
     <script src="memoriaSecondChance.js"></script>
     <script src="functionDefinitions.js"></script>
     <script src="main.js"></script>
+    <script>
+      document.getElementById('archivoProcesos').addEventListener('change',function(){
+          var file_reader=new FileReader();
+          file_reader.onload=function(){
+            memoriaTotal = file_reader.result.split("\r\n");
+            listaDeAccesos = file_reader.result.split("\r\n");
+          }
+          file_reader.readAsText(this.files[0]);
+      })
+  </script>
   </body>
 </html>

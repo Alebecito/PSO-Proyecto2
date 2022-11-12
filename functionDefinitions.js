@@ -7,10 +7,13 @@ const memoriaRandom = new claseMemoriaRandom("Random");
 const memoriaLRU = new claseMemoriaLRU("LRU");
 const memoriaAging = new claseMemoriaAging("Aging");
 const memoriaSecondChance = new claseMemoriaSecondChance("Second Chance");
-const memorias = [memoriaOptima, memoriaRandom];
+let memorias;
+let archivo="";
 let tablaDeProcesos = [];
-
-generatorRandom = SeedRandom(10); //El 10 es el seed
+let condicionesParaEmpezarSimulacion = false;
+let variableSemilla=10;
+let algoritmoSeleccionado=0;
+let generatorRandom;
 
 function obtenerRGB(proceso) {
   let RGB = [];
@@ -31,6 +34,23 @@ function uid() {
   return uint32.toString(16);
   };
 
+  function establecerCanva(){
+    definirAlgoritmo();
+    createCanvas(2500, 2500);
+    generatorRandom = SeedRandom(variableSemilla);
+    mapearMemoriaTotal();
+    mapearListaDeAccesos();
+  for (let element of memorias) {
+    element.construirTabla();
+  }
+  console.log("Memoria Total ", memoriaTotal);
+  console.log("Lista De Accesos ", listaDeAccesos); //El 10 es el seed
+  }
+
+
+
+
+
 function shiftString(str, leftShifts, rightShifts) {
   str = shiftLeft(str, leftShifts);
   return shiftRight(str, rightShifts);
@@ -45,6 +65,27 @@ function shiftRight(str, rightShifts) {
   return shiftLeft(str, len);
 }
 
+function definirAlgoritmo(){
+  switch (algoritmoSeleccionado){
+    case 1:
+       memorias = [memoriaOptima, memoriaLRU];
+      break;
+    case 2:
+       memorias = [memoriaOptima, memoriaSecondChance];
+      break;
+    case 3:
+       memorias = [memoriaOptima, memoriaAging];
+      break;
+    case 4:
+       memorias = [memoriaOptima, memoriaRandom];
+      break;
+    default:
+      break;
+
+  }
+
+}
+
 function generateRandomIntegerRGB() {
   randomValue = generatorRandom(255 + 1);
   return randomValue < 1 ? 1 : randomValue;
@@ -54,6 +95,54 @@ function generateRandomInteger(max, min) {
   randomValue = generatorRandom(max + 1);
   return randomValue < min ? min : randomValue;
 }
+
+
+function empezarSimulacion(){
+  
+  let nombreAlgoritmo="";
+  let entrada=document.getElementById("fsemilla").value;
+  entrada===""?variableSemilla=0:variableSemilla=parseInt(entrada);
+  if(isNaN(variableSemilla) ){
+   variableSemilla=0;
+  } 
+   archivo = document.getElementById('archivoProcesos').value;
+  if(algoritmoSeleccionado===0 || archivo===""){
+      alert("Campos para empezar Simulación incompletos");
+  }else{
+    switch (algoritmoSeleccionado){
+      case 1:
+      nombreAlgoritmo="LRU";
+      break;
+      case 2: 
+      nombreAlgoritmo="Second Chance";
+      break;
+
+      case 3:
+      nombreAlgoritmo="Aging";
+      break;
+
+      case 4:
+      nombreAlgoritmo="Random";
+      break;
+    default:
+        break;
+    }
+    alert(` Semilla: ${variableSemilla}\n Algoritmo: ${nombreAlgoritmo}\n Archivo: ${archivo}`)
+    establecerCanva();
+ 
+  condicionesParaEmpezarSimulacion=true;
+  }
+  
+  
+} 
+
+
+
+function guardarSeleccionAlgoritmo(algoritmoSeleccionadoP){
+  algoritmoSeleccionado=algoritmoSeleccionadoP;
+}
+
+
 
 function llamadaMasTardia(punteroIgnorado) {
   let arreglo = [];
@@ -157,21 +246,12 @@ function chequearProcesoAcabado() {
   }
 }
 
-function dibujarCronometro() {
-  fill(0);
-  textSize(20);
-  text(chronometer + "s", 10, 50);
-  if (frameCount % 60 == 0) {
-    chronometer++;
-  }
-}
+
 function getOccurrence(array, value) {
   return array.filter((v) => (v === value)).length;
 }
-function preload() {
-  memoriaTotal = loadStrings("procesos.txt");
-  listaDeAccesos = loadStrings("procesos.txt");
-}
+
+
 
 function mapearMemoriaTotal() {
   let objetoAuxiliar = [];
