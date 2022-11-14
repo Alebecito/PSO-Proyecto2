@@ -153,6 +153,9 @@ class claseMemoriaSecondChance {
             let index = this.colaDePaginas.findIndex(
               (element) => element.espacioEnMemoria === this.MMU[i].paginas[j].espacioEnMemoria
             );
+            // console.log(this.colaDePaginas);
+            // console.log(this.MMU[i].paginas[j].espacioEnMemoria);
+            // console.log(index);
             this.colaDePaginas[index].marcado = true;
             this.tiempoPaginaCargada(1);
           }
@@ -217,7 +220,7 @@ class claseMemoriaSecondChance {
     for (let element1 in this.MMU) {
       for (let element2 in this.MMU[element1].paginas) {
         if (this.MMU[element1].paginas[element2].espacioEnMemoria === indiceDeCambio) {
-          this.MMU[element1].paginas[element2].espacioEnMemoria = -1;
+          // this.MMU[element1].paginas[element2].espacioEnMemoria = -1;
           this.meterEnPaginasDecargadas(nuevoProceso, this.MMU[element1].paginas[element2].identificadorUnico);
           return indiceDeCambio;
         }
