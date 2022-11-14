@@ -15,6 +15,18 @@ let variableSemilla=10;
 let algoritmoSeleccionado=0;
 let generatorRandom;
 
+
+function componentToHex(c) {
+  var hex = c.toString(16);
+  return hex.length == 1 ? "0" + hex : hex;
+}
+function rgbToHexTest(proceso) {
+  
+  let arreglo = obtenerRGB(proceso);
+  console.log(arreglo);
+  return "#" + componentToHex(arreglo[0]) + componentToHex(arreglo[1]) + componentToHex(arreglo[2]);
+}
+
 function obtenerRGB(proceso) {
   
   // console.log("RGB begin");
@@ -297,7 +309,7 @@ function mapearListaDeAccesos() {
   listaDeAccesos = objetoAuxiliar.slice(0);
   arregloAuxiliar = [];
   for (let element in listaDeAccesos) {
-    cantidadAleatoria = generateRandomInteger(10, 1);
+    cantidadAleatoria = generateRandomInteger(15, 1);
     for (let i = 0; i < cantidadAleatoria; i++) {
       arregloAuxiliar.push(listaDeAccesos[element]);
     }

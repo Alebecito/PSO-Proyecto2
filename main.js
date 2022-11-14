@@ -27,7 +27,7 @@ function draw() {
       
     }
   
-    if (frameCount % 60 == 0) {
+    if (frameCount % 20 == 0) {
       if (listaDeAccesos.length > 0) {
         for (let element of memorias) {
           element.solicitarInstruccion(punteroActual, procesoSolicitado);
@@ -41,7 +41,10 @@ function draw() {
           }
         }
       }
-      reducirTiempoProcesos();
+      
+    }
+    if (frameCount % 60 == 0) {
+    reducirTiempoProcesos();
     }
 
   }

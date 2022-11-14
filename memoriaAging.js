@@ -294,22 +294,11 @@ class claseMemoriaAging {
       }
     }
   } 
+ 
 
-  RGBtoHex(proceso) {
-    let arreglo = obtenerRGB(JSON.stringify(proceso));
-    let r = arreglo[0];
-    let g = arreglo[1];
-    let b = arreglo[2];
-    function rgbToHex(rgb) {
 
-      let hex = Number(rgb).toString(16);
-      if (hex.length < 2) {
-          hex = "0" + hex;
-      }
-      return hex;
-    }
-    return rgbToHex(r) + rgbToHex(g) + rgbToHex(b);
-  }
+
+ 
   dibujarEstadoDeMemoria() {
     let verde = [255, 255, 255];
     let rojo = [255, 150, 150];
@@ -400,6 +389,8 @@ class claseMemoriaAging {
   
   generarDatosTabla() {
     let data = [];
+    console.log("tablaDeProcesos -> ", tablaDeProcesos);
+    console.log("MMU Length -> ", this.MMU.length);
 
     for (let i = 0; i< this.MMU.length; i++) {
       for (let j = 0; j < this.MMU[i].paginas.length; j++) {
@@ -413,7 +404,7 @@ class claseMemoriaAging {
         "D_ADDR": this.MMU[i].paginas[j].espacioEnMemoria == -1 ? this.MMU[i].paginas[j].idPagina+11 : " ",
         "Loaded_T": this.MMU[i].paginas[j].tiempoCargado,
         "Mark":" ",
-        "Color":this.RGBtoHex(procesoID)};    
+        "Color":rgbToHexTest(procesoID)};    
         data.push(page);
       }
 
@@ -433,7 +424,7 @@ class claseMemoriaAging {
             "<th>MARK </th>"+
           "</tr>";
           "</thead>";
-          "<tbody class\"tableBody\">";
+          "<tbody>";
       let tableRows = "";
       for (let i = 0; i < data.length; i++) {
         tableRows +=

@@ -30,7 +30,7 @@ class claseMemoriaOptima {
       }
     }
   } 
-
+ 
 RGBtoHex(proceso) {
     let arreglo = obtenerRGB(JSON.stringify(proceso));
     let r = arreglo[0];
@@ -162,7 +162,7 @@ RGBtoHex(proceso) {
     for(let i=0;i<this.fragmentacionInternar.length;i++){
       suma+=this.fragmentacionInternar[i].fragmentacion;
     }
-    return suma;
+    return round(suma,2);
   }
   paginarMemoria(nuevoProceso, nuevoPuntero) {
     let arregloOrdenado;
@@ -411,7 +411,7 @@ RGBtoHex(proceso) {
         "D_ADDR": this.MMU[i].paginas[j].espacioEnMemoria == -1 ? this.MMU[i].paginas[j].idPagina+11 : " ",
         "Loaded_T": this.MMU[i].paginas[j].tiempoCargado,
         "Mark":" ",
-        "Color":this.RGBtoHex(procesoID)};    
+        "Color":rgbToHexTest(procesoID)};    
         data.push(page);
       }
 

@@ -292,18 +292,22 @@ class claseMemoriaSecondChance {
   
   generarDatosTabla() {
     let data = [];
+    console.log("tablaDeProcesos -> ", tablaDeProcesos);
+    console.log("MMU Length -> ", this.MMU.length);
 
     for (let i = 0; i< this.MMU.length; i++) {
       for (let j = 0; j < this.MMU[i].paginas.length; j++) {
+        let procesoID = procesoDePuntero(this.MMU[i].id);
         let page = {"PageID":this.MMU[i].paginas[j].idPagina, 
-        "PID":tablaDeProcesos[i].idProceso,
+        // "PID":tablaDeProcesos[i].idProceso,
+        "PID":procesoID,
         "Loaded": this.MMU[i].paginas[j].espacioEnMemoria != -1 ? "X" : " ",
         "L_ADDR": this.MMU[i].id,
         "M_ADDR": this.MMU[i].paginas[j].espacioEnMemoria != -1 ? this.MMU[i].paginas[j].espacioEnMemoria : " ",
         "D_ADDR": this.MMU[i].paginas[j].espacioEnMemoria == -1 ? this.MMU[i].paginas[j].idPagina+11 : " ",
         "Loaded_T": this.MMU[i].paginas[j].tiempoCargado,
-        "Mark":this.MMU[i].paginas[j].marcado ? "X" : " ",
-        "Color":this.RGBtoHex(tablaDeProcesos[i])};    
+        "Mark":" ",
+        "Color":rgbToHexTest(procesoID)};    
         data.push(page);
       }
 
