@@ -16,14 +16,20 @@ let algoritmoSeleccionado=0;
 let generatorRandom;
 
 function obtenerRGB(proceso) {
+  
+  // console.log("RGB begin");
+  // console.log("Proceso", proceso);
   let RGB = [];
   for (let element in tablaDeProcesos) {
-    if (tablaDeProcesos[element].idProceso === proceso) {
+    // console.log(tablaDeProcesos[element].idProceso)
+    if (parseInt(tablaDeProcesos[element].idProceso) === parseInt(proceso)) {
       RGB.push(tablaDeProcesos[element].R);
       RGB.push(tablaDeProcesos[element].G);
       RGB.push(tablaDeProcesos[element].B);
     }
   }
+  // console.log("RGB ARRAY", RGB);
+  // console.log("RGB end");
   return RGB;
 }
 
@@ -35,16 +41,19 @@ function uid() {
   };
 
   function establecerCanva(){
+    console.log("TABLA DE PROCESOS:", tablaDeProcesos);
     definirAlgoritmo();
     createCanvas(2500, 2500);
     generatorRandom = SeedRandom(variableSemilla);
     mapearMemoriaTotal();
+    
     mapearListaDeAccesos();
+    console.log("Memoria Total ", memoriaTotal);
+    console.log("Lista De Accesos ", listaDeAccesos); //El 10 es el seed
   for (let element of memorias) {
     element.construirTabla();
   }
-  console.log("Memoria Total ", memoriaTotal);
-  console.log("Lista De Accesos ", listaDeAccesos); //El 10 es el seed
+  
   }
 
 
@@ -179,6 +188,14 @@ function procesoDePuntero(puntero) {
   for (let element in memoriaTotal) {
     if (memoriaTotal[element].puntero === puntero) {
       return memoriaTotal[element].iDproceso;
+    }
+  }
+}
+
+function objetoProcesoDePuntero(puntero) {
+  for (let element in memoriaTotal) {
+    if (memoriaTotal[element].puntero === puntero) {
+      return memoriaTotal[element];
     }
   }
 }

@@ -296,14 +296,19 @@ class claseMemoriaAging {
   } 
 
   RGBtoHex(proceso) {
+    let arreglo = obtenerRGB(JSON.stringify(proceso));
+    let r = arreglo[0];
+    let g = arreglo[1];
+    let b = arreglo[2];
     function rgbToHex(rgb) {
+
       let hex = Number(rgb).toString(16);
       if (hex.length < 2) {
           hex = "0" + hex;
       }
       return hex;
     }
-    return rgbToHex(proceso.R) + rgbToHex(proceso.G) + rgbToHex(proceso.B);
+    return rgbToHex(r) + rgbToHex(g) + rgbToHex(b);
   }
   dibujarEstadoDeMemoria() {
     let verde = [255, 255, 255];
@@ -398,15 +403,17 @@ class claseMemoriaAging {
 
     for (let i = 0; i< this.MMU.length; i++) {
       for (let j = 0; j < this.MMU[i].paginas.length; j++) {
+        let procesoID = procesoDePuntero(this.MMU[i].id);
         let page = {"PageID":this.MMU[i].paginas[j].idPagina, 
-        "PID":tablaDeProcesos[i].idProceso,
+        // "PID":tablaDeProcesos[i].idProceso,
+        "PID":procesoID,
         "Loaded": this.MMU[i].paginas[j].espacioEnMemoria != -1 ? "X" : " ",
         "L_ADDR": this.MMU[i].id,
         "M_ADDR": this.MMU[i].paginas[j].espacioEnMemoria != -1 ? this.MMU[i].paginas[j].espacioEnMemoria : " ",
         "D_ADDR": this.MMU[i].paginas[j].espacioEnMemoria == -1 ? this.MMU[i].paginas[j].idPagina+11 : " ",
         "Loaded_T": this.MMU[i].paginas[j].tiempoCargado,
         "Mark":" ",
-        "Color":this.RGBtoHex(tablaDeProcesos[i])};    
+        "Color":this.RGBtoHex(procesoID)};    
         data.push(page);
       }
 
