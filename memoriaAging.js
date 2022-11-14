@@ -45,7 +45,7 @@ class claseMemoriaAging {
     for(let i=0;i<this.fragmentacionInternar.length;i++){
       suma+=this.fragmentacionInternar[i].fragmentacion;
     }
-    return suma;
+    return round(suma,2);
   }
 
   solicitarInstruccion(puntero, procesoID) {
